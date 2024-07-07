@@ -1,0 +1,50 @@
+{% extends 'frame/main.html' %} {% load widget_tweaks %} {% block content %}
+<div class="col-12 mt-3">
+  <div class="card card-olive card-outline">
+    <div class="card-header">
+      <h2 class="card-title mt-2">Data Guru</h2>
+      <div class="card-tools">
+        <ul class="nav nav-pills ml-auto">
+          <li class="nav-item mr-1">
+            <a href="{% url 'add_dataguru' %}" class="btn btn-block btn-primary"
+              ><i class="fas fa-plus"></i> Tambah Guru</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              href="{% url 'output' %}"
+              target="_blank"
+              class="btn btn-dark mb-2 float-right"
+              ><i class="fas fa-download"></i
+            ></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">No.</th>
+            <th>Nama</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for dj in d_guru %}
+          <tr>
+            <td class="align-middle text-center">{{forloop.counter}}</td>
+            <td class="align-middle">{{ dj.nama }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center">Data Guru Kosong</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+{% endblock content %}
