@@ -16,6 +16,8 @@ from django.contrib.auth.models import Group
 
 from django.contrib.auth.decorators import login_required
 from .decorators import *
+from .telegram_util import send_telegram_message
+from django.contrib.humanize.templatetags.humanize import intcomma
 # Create your views here.
 
 # Master
@@ -54,10 +56,10 @@ def data(request):
     }
     return render(request, 'halaman/data.html', jeda)
 
+@login_required(login_url='login')
+@ijinkan_pengguna(yang_diizinkan=["master"])
 def dataguru(request):
-    # data_guru = Register.objects.filter(status_guru='Aktif')
-    # filter_dataguru = DataFilter(request.GET, queryset=data_guru)
-    data_guru = Teacher.objects.all()
+    data_guru = Teacher.objects.order_by('-id') # order by id descending (data terbaru)
 
     jeda = {
         "judul": "Daftar Data Guru",
@@ -65,6 +67,57 @@ def dataguru(request):
         "d_guru": data_guru,
     }
     return render(request, 'halaman/guru.html', jeda)
+
+
+@login_required(login_url='login')
+@ijinkan_pengguna(yang_diizinkan=["master"])
+def add_dataguru(request):
+    f_register = GuruForm()
+
+    if request.method == 'POST':
+        # print('Cetak POST:', request.POST)
+        f_simpan = GuruForm(request.POST)
+        if f_simpan.is_valid:
+            f_simpan.save()
+            return redirect('dataguru')
+
+    jeda = {
+        "judul": "Add Data Guru",
+        "menu": "dataguru",
+        "form": f_register,
+    }
+    return render(request, 'halaman/new_dataguru.html', jeda)
+
+
+@login_required(login_url='login')
+@ijinkan_pengguna(yang_diizinkan=["master"])
+def edit_dataguru(request, pk):
+    data_guru = Teacher.objects.get(id=pk)
+    f_register = GuruForm(instance=data_guru)
+
+    if request.method == 'POST':
+        # print('Cetak POST:', request.POST)
+        f_simpan = GuruForm(request.POST, instance=data_guru)
+        if f_simpan.is_valid:
+            f_simpan.save()
+            return redirect('dataguru')
+
+    jeda = {
+        "judul": "Edit Data Guru",
+        "menu": "dataguru",
+        "form": f_register,
+    }
+    return render(request, 'halaman/edit_dataguru.html', jeda)
+
+
+@login_required(login_url='login')
+@ijinkan_pengguna(yang_diizinkan=["master"])
+def delete_dataguru(request, pk):
+    data_guru = Teacher.objects.get(id=pk)
+    data_guru.delete()
+    return redirect('dataguru')
+
+
 
 @login_required(login_url='login')
 @ijinkan_pengguna(yang_diizinkan=["master"])
@@ -97,25 +150,6 @@ def add_data(request):
     }
     return render(request, 'halaman/new_data.html', jeda)
 
-
-@login_required(login_url='login')
-@ijinkan_pengguna(yang_diizinkan=["master"])
-def add_dataguru(request):
-    f_register = RegisterForm()
-
-    if request.method == 'POST':
-        # print('Cetak POST:', request.POST)
-        f_simpan = RegisterForm(request.POST, request.FILES)
-        if f_simpan.is_valid:
-            f_simpan.save()
-            return redirect('dataguru')
-
-    jeda = {
-        "judul": "Add Data Guru",
-        "menu": "dataguru",
-        "form": f_register,
-    }
-    return render(request, 'halaman/new_dataguru.html', jeda)
 
 @login_required(login_url='login')
 @ijinkan_pengguna(yang_diizinkan=["master"])
@@ -349,3 +383,34 @@ def output(request):
     response['Content-Disposition'] = 'attachment; filename="datasantri.xls"'
     
     return response
+
+@login_required(login_url='login')
+@ijinkan_pengguna(yang_diizinkan=["wilayah"])
+def pelanggaran_view(request):
+    if request.method == 'POST':
+        form = PelanggaranForm(request.POST)
+        if form.is_valid():
+            nama = form.cleaned_data['nama']
+            kelas = form.cleaned_data['kelas']
+            sekolah = form.cleaned_data['sekolah']
+            alamat = form.cleaned_data['alamat']
+            nomer_wa = form.cleaned_data['nomer_wa']
+            subject = form.cleaned_data['subject']
+            email = form.cleaned_data['email']
+            isi_pesan = form.cleaned_data['isi_pesan']
+            
+            # Ambil chat_id dari model ChatID berdasarkan nomor HP (atau kriteria lain)
+            try:
+                chat_id = ChatID.objects.filter(aktif=True).values_list('chatid', flat=True).first()
+                # Format pesan yang akan dikirim
+                message = f"Nama: {nama}\nKelas: {kelas}\nSekolah: {sekolah}\nAlamat: {alamat}\nNomer WA: {nomer_wa}\nSubject: {subject}\nEmail: {email}\nIsi Pesan: {isi_pesan}"
+                # Kirim pesan menggunakan bot Telegram
+                send_telegram_message(chat_id, message)
+                messages.success(request, "Pesan sukses dikirimkan ke yayasan")
+                return redirect('pelanggaran')
+            except ChatID.DoesNotExist:
+                form.add_error(None, 'Chat ID tidak ditemukan untuk nomor HP ini.')
+    else:
+        form = PelanggaranForm()
+    
+    return render(request, 'pelanggaran_form.html', {'form': form, 'menu': 'pelanggaran', 'judul': 'Pelanggaran'})

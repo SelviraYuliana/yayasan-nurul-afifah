@@ -1,0 +1,96 @@
+{% extends 'wilayah/main.html' %} {% load widget_tweaks %} {% block content %}
+<div class="col-md-12 mt-3">
+    <div class="card card-olive card-outline">
+      <div class="card-header">
+        <h2 class="card-title mt-2">Form Pelanggaran Siswa</h2>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags %} {% endif %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center mb-3 justify-content-center mb-3">
+                <div class="col-md-2">
+                    {{ form.nama.label_tag }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.nama }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3 justify-content-center mb-3">
+                <div class="col-md-2">
+                    {{ form.kelas.label_tag }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.kelas }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3 justify-content-center mb-3">
+                <div class="col-md-2">
+                    {{ form.sekolah.label_tag }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.sekolah }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3 justify-content-center mb-3">
+                <div class="col-md-2">
+                    {{ form.alamat.label_tag }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.alamat }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-2">
+                    {{ form.nomer_wa.label_tag }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.nomer_wa }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-2">
+                    {{ form.subject.label_tag }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.subject }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-2">
+                    {{ form.email.label_tag }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.email }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-2">
+                    {{ form.isi_pesan.label_tag }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.isi_pesan }}
+                </div>
+            </div>
+            <div class="row justify-content-end">
+              <div class="col-md-8">
+                <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+              </div>
+            </div>
+        </form>
+      </div>
+      <!-- /.card-body -->
+    </div>
+  </div>
+{% endblock content %}

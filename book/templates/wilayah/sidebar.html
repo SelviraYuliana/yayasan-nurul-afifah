@@ -17,7 +17,7 @@
           </a>
         </li>
         <li class="nav-item mt-1">
-          <a href="{% url 'data_wil' %}" class="nav-link {% if menu == "data_wil" %}active{% else %}bg-light{% endif %}">
+          <a href="{% url 'data_wil' %}" class="nav-link {% if menu == 'data_wil' %}active{% else %}bg-light{% endif %}">
             <i class="nav-icon fas fa-users"></i>
             <p>
               Data Santri
@@ -25,10 +25,18 @@
           </a>
         </li>
         <li class="nav-item mt-1">
-          <a href="{% url 'alumni_wil' %}" class="nav-link {% if menu == "alumni_wil" %}active{% else %}bg-light{% endif %}">
+          <a href="{% url 'alumni_wil' %}" class="nav-link {% if menu == 'alumni_wil' %}active{% else %}bg-light{% endif %}">
             <i class="nav-icon fas fa-users"></i>
             <p>
               Data Alumi
+            </p>
+          </a>
+        </li>
+        <li class="nav-item mt-1">
+          <a href="{% url 'pelanggaran' %}" class="nav-link {% if menu == 'pelanggaran' %}active{% else %}bg-light{% endif %}">
+            <i class="nav-icon fas fa-users"></i>
+            <p>
+              Pelanggaran
             </p>
           </a>
         </li>

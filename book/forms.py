@@ -3,11 +3,68 @@ from django.forms import ModelForm
 from . models import *
 
 
+class PelanggaranForm(forms.Form):
+    nama = forms.CharField(
+        label='Nama Lengkap',
+        max_length=200,
+        widget=forms.TextInput(
+            attrs={'required': True, 'class': 'form-control', 'placeholder': 'Ketikkan Nama Lengkap Siswa'}
+        )
+    )
+    kelas = forms.CharField(
+        label='Kelas',
+        max_length=200,
+        widget=forms.TextInput(
+            attrs={'required': True, 'class': 'form-control', 'placeholder': 'Ketikkan Kelas Siswa'}
+        )
+    )
+    sekolah = forms.CharField(
+        label='Sekolah / Lembaga',
+        max_length=200,
+        widget=forms.TextInput(
+            attrs={'required': True, 'class': 'form-control', 'placeholder': 'Ketikkan Sekolah Siswa'}
+        )
+    )
+    alamat = forms.CharField(
+        label='Alamat Siswa',
+        max_length=200,
+        widget=forms.TextInput(
+            attrs={'required': True, 'class': 'form-control', 'placeholder': 'Ketikkan Alamat Lengkap Siswa'}
+        )
+    )
+    nomer_wa = forms.CharField(
+        label='Nomor WhatsApp',
+        max_length=15,
+        widget=forms.TextInput(
+            attrs={'required': True, 'class': 'form-control', 'placeholder': 'Ketikkan Nomor WhatsApp'}
+        )
+    )
+    subject = forms.CharField(
+        label='Subject',
+        max_length=200,
+        widget=forms.TextInput(
+            attrs={'required': True, 'class': 'form-control', 'placeholder': 'Ketikkan Subject'}
+        )
+    )
+    email = forms.EmailField(
+        label='Email',
+        widget=forms.EmailInput(
+            attrs={'required': True, 'class': 'form-control', 'placeholder': 'Ketikkan Email'}
+        )
+    )
+    isi_pesan = forms.CharField(
+        label='Isi Pesan',
+        widget=forms.Textarea(
+            attrs={'required': True, 'class': 'form-control', 'placeholder': 'Ketikkan Isi Pesan'}
+        )
+    )
+
+
+
 class WilayahForm(ModelForm):
     class Meta:
         model = Wilayah
         fields = ('nama_wilayah', 'nama_kepala')
-
         widgets = {
             'nama_wilayah': forms.TextInput(attrs={
                 'required': True,
@@ -358,51 +415,59 @@ class RegisterForm(ModelForm):
         }
 
 # Guru 
-class Guru(ModelForm):
+class GuruForm(ModelForm):
     class Meta:
-        
+        model = Guru
+        fields = '__all__'
         widgets = {
-            
             'nama': forms.TextInput(attrs={
                 'required': True,
                 'class': 'form-control',
-                'placeholder': 'Ketikkan Nama Lengkap',
-                'onkeypress':"return event.charCode < 48 || event.charCode  >57"
-                }),
+                'placeholder': 'Ketikkan Nama Lengkap Guru',
+                'label': 'Nama Guru'
+            }),
             
             'gender_guru': forms.Select(attrs={
                 'required': True,
                 'class': 'form-control' 
-                }),
+            }),
             
             'tempat_kelahiran': forms.TextInput(attrs={
-                'required': True, 
-                'class': 'form-control', 
-                'placeholder': 'Ketikkan Kota Kelahiran', 
-                'onkeypress':"return event.charCode < 48 || event.charCode  >57"
-                }),
+                'required': True,
+                'class': 'form-control',
+                'placeholder': 'Ketikkan Kota Kelahiran'
+            }),
             
             'tgl_lahir': forms.TextInput(attrs={
                 'type': 'date',
                 'required':True,
                 'class': 'form-control'
-                }),
-
-            'alamat': forms.TextInput(attrs={
+            }),
+            
+            'alamat': forms.Textarea(attrs={
                 'required': True,
                 'class': 'form-control',
-                'placeholder': 'Ketikkan Alamat Domisili'
-                }),
-
+                'placeholder': 'Ketikkan Alamat Lengkap Guru'
+            }),
+            
             'jabatan': forms.TextInput(attrs={
                 'required': True,
                 'class': 'form-control',
-                'placeholder': 'Ketikkan Jabatan'
-                }),
-
+                'placeholder': 'Ketikkan Jabatan Guru'
+            }),
+            
             'pendidikan': forms.TextInput(attrs={
                 'required': True,
                 'class': 'form-control',
-                'placeholder': 'Ketikkan Pendidikan'
-                }),
+                'placeholder': 'Ketikkan Pendidikan Guru'
+            }),
+        }
+        labels = {
+            "nama": "Nama Guru",
+            "gender_guru": "Jenis Kelamin",
+            "tempat_kelahiran": "Tempat Kelahiran",
+            "tgl_lahir": "Tanggal Kelahiran",
+            "alamat": "Alamat",
+            "jabatan": "Jabatan",
+            "pendidikan": "Pendidikan",
         }

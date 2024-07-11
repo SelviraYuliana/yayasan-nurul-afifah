@@ -246,19 +246,12 @@ class Guru(models.Model):
         ('Laki-Laki', 'Laki-Laki'),
         ('Perempuan', 'Perempuan'),
     )
-
     nama = models.CharField(max_length=300, blank=True, null=True)
-    
     gender_guru = models.CharField(max_length=200, blank=True, null=True, choices=JENIS_KELAMIN)
-    
     tempat_kelahiran = models.CharField(max_length=100, blank=True, null=True)
-    
     tgl_lahir = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
-
     alamat = models.CharField(max_length=350, blank=True, null=True)
-
     jabatan = models.CharField(max_length=350, blank=True, null=True)
-
     pendidikan = models.CharField(max_length=350, blank=True, null=True)
 
     def __str__(self):
@@ -266,3 +259,12 @@ class Guru(models.Model):
 
     class Meta:
         verbose_name_plural ="Guru"
+        
+
+class ChatID(models.Model):
+    chatid = models.CharField(max_length=200, blank=False, null=True)
+    nama = models.CharField(max_length=200, blank=False, null=True)
+    aktif = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name_plural = "Data Chat"

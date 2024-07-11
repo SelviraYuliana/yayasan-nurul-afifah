@@ -12,6 +12,7 @@ admin.site.register(Kelas)
 admin.site.register(Pendidikan)
 admin.site.register(Penghasilan)
 admin.site.register(Guru)
+admin.site.register(ChatID)
 
 # Data Register
 # NB: rule for editing django-admin
