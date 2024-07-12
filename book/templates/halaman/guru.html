@@ -23,11 +23,36 @@
     </div>
     <!-- /.card-header -->
     <div class="card-body">
+      <form method="get">
+        <div class="row">
+          <div class="col-md-2 mb-2">
+            <p>Nama Lengkap:</p>
+            {{ filter.form.nama_lengkap|add_class:"form-control" }}
+          </div>
+          <div class="col-md-2 mb-2">
+            <p>Gender:</p>
+            {{ filter.form.gender_santri|add_class:"form-control" }}
+          </div>
+          <div class="col-md-2 mt-4 mb-2">
+            <button class="btn btn-danger btn-block mt-3" type="submit">
+              <i class="fas fa-search"></i> Search
+            </button>
+          </div>
+        </div>
+      </form>
+
       <table id="example1" class="table table-bordered table-striped">
         <thead>
           <tr>
             <th class="align-middle text-center">No.</th>
             <th>Nama</th>
+            <th>Gender</th>
+            <th>Tetala</th>
+            <th>Tanggal Lahir</th>
+            <th>Alamat</th>
+            <th>Jabatan</th>
+            <th>Pendidikan</th>
+            <th class="align-middle text-center">Action</th>
           </tr>
         </thead>
         <tbody>
