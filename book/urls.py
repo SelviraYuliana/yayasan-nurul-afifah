@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     
     path('pelanggaran/', views.pelanggaran_view, name='pelanggaran'),
+    path('get-student-data/', views.get_student_data, name='get_student_data'),
 
     # Utilitas
     path('login', views.entry, name='login'),

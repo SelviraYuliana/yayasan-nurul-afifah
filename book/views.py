@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import *
 from . models import Guru as Teacher
+from . models import Register as Santri
 from . forms import *
 from . resources import RegisterResource
 from . filters import DataFilter
@@ -396,14 +397,13 @@ def pelanggaran_view(request):
             alamat = form.cleaned_data['alamat']
             nomer_wa = form.cleaned_data['nomer_wa']
             subject = form.cleaned_data['subject']
-            email = form.cleaned_data['email']
             isi_pesan = form.cleaned_data['isi_pesan']
             
             # Ambil chat_id dari model ChatID berdasarkan nomor HP (atau kriteria lain)
             try:
                 chat_id = ChatID.objects.filter(aktif=True).values_list('chatid', flat=True).first()
                 # Format pesan yang akan dikirim
-                message = f"Nama: {nama}\nKelas: {kelas}\nSekolah: {sekolah}\nAlamat: {alamat}\nNomer WA: {nomer_wa}\nSubject: {subject}\nEmail: {email}\nIsi Pesan: {isi_pesan}"
+                message = f"Nama: {nama}\nKelas: {kelas}\nSekolah: {sekolah}\nAlamat: {alamat}\nNomer WA: {nomer_wa}\nSubject: {subject}\nIsi Pesan: {isi_pesan}"
                 # Kirim pesan menggunakan bot Telegram
                 send_telegram_message(chat_id, message)
                 messages.success(request, "Pesan sukses dikirimkan ke yayasan")
@@ -414,3 +414,23 @@ def pelanggaran_view(request):
         form = PelanggaranForm()
     
     return render(request, 'pelanggaran_form.html', {'form': form, 'menu': 'pelanggaran', 'judul': 'Pelanggaran'})
+
+
+
+
+@login_required(login_url='login')
+@ijinkan_pengguna(yang_diizinkan=["wilayah"])
+def get_student_data(request):
+    nis = request.GET.get('nis')
+    try:
+        student = Santri.objects.get(nis=nis)
+        data = {
+            'nama': student.nama_lengkap,
+            'kelas': student.kelas.tingkat,
+            'sekolah': student.masuk_lembaga,
+            'alamat': student.alamat,
+            'nomer_wa': student.telp,
+        }
+        return JsonResponse(data)
+    except Student.DoesNotExist:
+        return JsonResponse({'error': 'Student not found'}, status=404)

@@ -46,12 +46,6 @@ class PelanggaranForm(forms.Form):
             attrs={'required': True, 'class': 'form-control', 'placeholder': 'Ketikkan Subject'}
         )
     )
-    email = forms.EmailField(
-        label='Email',
-        widget=forms.EmailInput(
-            attrs={'required': True, 'class': 'form-control', 'placeholder': 'Ketikkan Email'}
-        )
-    )
     isi_pesan = forms.CharField(
         label='Isi Pesan',
         widget=forms.Textarea(

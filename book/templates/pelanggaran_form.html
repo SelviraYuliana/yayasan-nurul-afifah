@@ -19,6 +19,14 @@
         {% endif %}
         <form method="post">
             {% csrf_token %}
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-2">
+                    <label for="nis">NIS</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="nis" name="nis" class="form-control" placeholder="Enter NIS">
+                </div>
+            </div>
             <div class="row justify-content-center mb-3 justify-content-center mb-3">
                 <div class="col-md-2">
                     {{ form.nama.label_tag }}
@@ -69,14 +77,6 @@
             </div>
             <div class="row justify-content-center mb-3">
                 <div class="col-md-2">
-                    {{ form.email.label_tag }}
-                </div>
-                <div class="col-md-6">
-                    {{ form.email }}
-                </div>
-            </div>
-            <div class="row justify-content-center mb-3">
-                <div class="col-md-2">
                     {{ form.isi_pesan.label_tag }}
                 </div>
                 <div class="col-md-6">
@@ -93,4 +93,34 @@
       <!-- /.card-body -->
     </div>
   </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $('#nis').on('input', function() {
+              var nis = $(this).val();
+              if (nis.length < 8) return; // Jika input NIS kurang dari 8 karakter, abaikan
+              $.ajax({
+                  url: '{% url "get_student_data" %}',
+                  data: {
+                      'nis': nis
+                  },
+                  success: function(data) {
+                      if(data.error) {
+                          alert(data.error);
+                      } else {
+                          $('#id_nama').val(data.nama);
+                          $('#id_kelas').val(data.kelas);
+                          $('#id_sekolah').val(data.sekolah);
+                          $('#id_alamat').val(data.alamat);
+                          $('#id_nomer_wa').val(data.nomer_wa);
+                          $('#id_email').val(data.email);
+                      }
+                  }
+              });
+          });
+      });
+  </script>
+
 {% endblock content %}
