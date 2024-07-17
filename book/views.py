@@ -388,22 +388,33 @@ def output(request):
 @login_required(login_url='login')
 @ijinkan_pengguna(yang_diizinkan=["wilayah"])
 def pelanggaran_view(request):
+    pelanggaran = Pelanggaran.objects.all()
+    
+    return render(request, 'wilayah/pelanggaran.html', {'pelanggaran': pelanggaran, 'menu': 'pelanggaran', 'judul': 'Data Pelanggaran'})
+
+
+@login_required(login_url='login')
+@ijinkan_pengguna(yang_diizinkan=["wilayah"])
+def kirim_pelanggaran(request):
     if request.method == 'POST':
         form = PelanggaranForm(request.POST)
         if form.is_valid():
-            nama = form.cleaned_data['nama']
-            kelas = form.cleaned_data['kelas']
-            sekolah = form.cleaned_data['sekolah']
-            alamat = form.cleaned_data['alamat']
-            nomer_wa = form.cleaned_data['nomer_wa']
-            subject = form.cleaned_data['subject']
-            isi_pesan = form.cleaned_data['isi_pesan']
+            pelanggaran = Pelanggaran(
+                nama=form.cleaned_data['nama'],
+                kelas=form.cleaned_data['kelas'],
+                sekolah=form.cleaned_data['sekolah'],
+                alamat=form.cleaned_data['alamat'],
+                nomer_wa=form.cleaned_data['nomer_wa'],
+                subject=form.cleaned_data['subject'],
+                isi_pesan=form.cleaned_data['isi_pesan']
+            )
+            pelanggaran.save()
             
             # Ambil chat_id dari model ChatID berdasarkan nomor HP (atau kriteria lain)
             try:
                 chat_id = ChatID.objects.filter(aktif=True).values_list('chatid', flat=True).first()
                 # Format pesan yang akan dikirim
-                message = f"Nama: {nama}\nKelas: {kelas}\nSekolah: {sekolah}\nAlamat: {alamat}\nNomer WA: {nomer_wa}\nSubject: {subject}\nIsi Pesan: {isi_pesan}"
+                message = f"Nama: {pelanggaran.nama}\nKelas: {pelanggaran.kelas}\nSekolah: {pelanggaran.sekolah}\nAlamat: {pelanggaran.alamat}\nNomer WA: {pelanggaran.nomer_wa}\nSubject: {pelanggaran.subject}\nIsi Pesan: {pelanggaran.isi_pesan}"
                 # Kirim pesan menggunakan bot Telegram
                 send_telegram_message(chat_id, message)
                 messages.success(request, "Pesan sukses dikirimkan ke yayasan")
@@ -432,5 +443,5 @@ def get_student_data(request):
             'nomer_wa': student.telp,
         }
         return JsonResponse(data)
-    except Student.DoesNotExist:
+    except Santri.DoesNotExist:
         return JsonResponse({'error': 'Student not found'}, status=404)

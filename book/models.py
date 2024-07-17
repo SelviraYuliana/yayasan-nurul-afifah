@@ -268,3 +268,16 @@ class ChatID(models.Model):
 
     class Meta:
         verbose_name_plural = "Data Chat"
+        
+class Pelanggaran(models.Model):
+    nama = models.CharField(max_length=200)
+    kelas = models.CharField(max_length=200)
+    sekolah = models.CharField(max_length=200)
+    alamat = models.CharField(max_length=200)
+    nomer_wa = models.CharField(max_length=15)
+    subject = models.CharField(max_length=200)
+    isi_pesan = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.nama} - {self.subject}'

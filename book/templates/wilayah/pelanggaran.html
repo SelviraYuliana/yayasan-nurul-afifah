@@ -1,0 +1,56 @@
+{% extends 'wilayah/main.html' %} {% block content %}
+<div class="col-12 mt-3">
+  <div class="card card-olive card-outline">
+    <div class="card-header">
+      <h2 class="card-title mt-2">
+        Data Santri Melanggar {{request.user.wilayah.nama_wilayah}}
+      </h2>
+      <div class="card-tools">
+        <ul class="nav nav-pills ml-auto">
+          <li class="nav-item mr-1">
+            <a href="{% url 'kirim_pelanggaran' %}" class="btn btn-block btn-primary"
+              ><i class="fas fa-plus"></i> Kirim Pesan Pelanggaran</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">No.</th>
+            <th>Nama</th>
+            <th>Kelas</th>
+            <th>Sekolah</th>
+            <th>Alamat</th>
+            <th>Nomer Telp</th>
+            <th>Subject</th>
+            <th>Pesan Pelanggaran</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for dj in pelanggaran%}
+          <tr>
+            <td class="text-center">{{forloop.counter}}</td>
+            <td>{{dj.nama}}</td>
+            <td>{{dj.kelas}}</td>
+            <td>{{dj.sekolah}}</td>
+            <td>{{dj.alamat}}</td>
+            <td>{{dj.nomer_wa}}</td>
+            <td>{{dj.subject}}</td>
+            <td>{{dj.isi_pesan}}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="14" class="text-center">Data Santri Kosong</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+{% endblock content %}
